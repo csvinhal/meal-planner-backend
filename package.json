@@ -1,0 +1,38 @@
+{
+  "name": "meal-planner-backend",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node --exec babel-node index.js",
+    "dev": "nodemon --exec babel-node -r dotenv/config index.js dotenv_config_path=./.env",
+    "debug": "nodemon --inspect babel-node -r dotenv/config index.js dotenv_config_path=./.env",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": "git+https://github.com/csvinhal/meal-planner-backend.git",
+  "keywords": [],
+  "author": "Cristiano Vinhal <cristiano.vinhal10@gmail.com>",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/csvinhal/meal-planner-backend/issues"
+  },
+  "homepage": "https://github.com/csvinhal/meal-planner-backend#readme",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "helmet": "^4.0.0",
+    "monk": "^7.3.1",
+    "monk-middleware-wrap-non-dollar-update": "^0.2.1",
+    "morgan": "^1.10.0",
+    "yup": "^0.29.3"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.10.5",
+    "@babel/core": "^7.11.1",
+    "@babel/node": "^7.10.5",
+    "@babel/preset-env": "^7.11.0",
+    "dotenv": "^8.2.0",
+    "nodemon": "^2.0.4"
+  }
+}
