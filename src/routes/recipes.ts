@@ -1,4 +1,4 @@
-import express from "express";
+import express, { NextFunction, Request, Response } from "express";
 import {
   deleteRecipe,
   getRecipe,
@@ -9,7 +9,7 @@ import {
 
 const router = express.Router();
 
-router.get("/", async (req, res, next) => {
+router.get("/", async (req: Request, res: Response, next: NextFunction) => {
   try {
     const recipes = await listRecipes();
     res.status(200).json(recipes);
@@ -30,8 +30,8 @@ router.get("/:id", async (req, res, next) => {
 
 router.post("/", async (req, res, next) => {
   try {
-    const { recipeName, recipeDescription } = req.body;
-    const recipe = await saveRecipe(recipeName, recipeDescription);
+    const { recipeName, description } = req.body;
+    const recipe = await saveRecipe(recipeName, description);
     res.status(200).json(recipe);
   } catch (error) {
     next(error);
