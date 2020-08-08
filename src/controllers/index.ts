@@ -1,1 +1,3 @@
-export * from "./recipe";
+export * from "./meal.controller";
+export * from "./recipe.controller";
+

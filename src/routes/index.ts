@@ -1,9 +1,11 @@
 import express, { NextFunction, Request, Response } from "express";
-import recipes from "./recipes";
+import meals from "./meal.routes";
+import recipes from "./recipe.routes";
 
 const router = express.Router();
 
 router.use("/recipes", recipes);
+router.use("/meals", meals);
 
 router.use(function (
   err: any,

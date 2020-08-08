@@ -1,13 +1,11 @@
 import express, { NextFunction, Request, Response } from "express";
-import { createSchedule, listSchedules } from "../controllers";
+import { createMeal, listMeals } from "../controllers";
 
 const router = express.Router();
 
 router.get("/", async (req: Request, res: Response, next: NextFunction) => {
   try {
-    console.log('passou aqui');
-    const schedules = await listSchedules();
-    console.log('retornou')
+    const schedules = await listMeals();
     res.status(200).json(schedules);
   } catch (error) {
     next(error);
@@ -16,8 +14,8 @@ router.get("/", async (req: Request, res: Response, next: NextFunction) => {
 
 router.post("/", async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const { date, scheduleType, recipes } = req.body;
-    const schedule = await createSchedule({ date, scheduleType, recipes });
+    const { date, mealType, recipes } = req.body;
+    const schedule = await createMeal({ date, mealType, recipes });
     res.status(200).json(schedule);
   } catch (error) {
     next(error);
