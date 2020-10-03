@@ -3,7 +3,7 @@ import express, { Application, NextFunction, Request, Response } from "express";
 import helmet from "helmet";
 import morgan from "morgan";
 import "./db/config";
-import routes from "./routes";
+import routesV1 from "./api/v1";
 
 const app: Application = express();
 app.use(helmet());
@@ -11,7 +11,7 @@ app.use(morgan("common"));
 app.use(cors());
 app.use(express.json());
 
-app.use(routes);
+app.use(routesV1);
 
 app.use((error: any, req: Request, res: Response, next: NextFunction) => {
   if (error.status) {

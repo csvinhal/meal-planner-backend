@@ -5,15 +5,13 @@ import {
   getRecipe,
   listRecipes,
   updateRecipe,
-} from "../controllers";
+} from "../../controllers";
 
 const router = express.Router();
 
 router.get("/", async (req: Request, res: Response, next: NextFunction) => {
   try {
-    console.log('passou aqui')
     const recipes = await listRecipes();
-    console.log('retornou')
     res.status(200).json(recipes);
   } catch (error) {
     next(error);

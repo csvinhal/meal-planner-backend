@@ -4,8 +4,8 @@ import recipes from "./recipe.routes";
 
 const router = express.Router();
 
-router.use("/recipes", recipes);
-router.use("/meals", meals);
+router.use("/v1/recipes", recipes);
+router.use("/v1/meals", meals);
 
 router.use(function (
   err: any,

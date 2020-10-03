@@ -1,5 +1,5 @@
+import { createMeal, listMeals } from "../../controllers";
 import express, { NextFunction, Request, Response } from "express";
-import { createMeal, listMeals } from "../controllers";
 
 const router = express.Router();
 

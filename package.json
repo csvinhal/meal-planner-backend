@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node --exec babel-node index.ts",
+    "start": "ts-node --exec index.ts",
     "dev": "nodemon --exec ts-node -r dotenv/config index.ts dotenv_config_path=./.env",
     "debug": "nodemon --inspect babel-node -r dotenv/config index.ts dotenv_config_path=./.env",
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -24,6 +24,7 @@
     "@types/mongoose": "^5.7.36",
     "@types/morgan": "^1.9.1",
     "cors": "^2.8.5",
+    "date-fns": "^2.16.1",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "helmet": "^4.0.0",
