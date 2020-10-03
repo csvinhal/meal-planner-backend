@@ -1,13 +1,13 @@
-import { Document, Model, model, Schema, Types } from "mongoose";
-import { IRecipeDocument, RecipeSchema } from "./recipe.model";
+import { Document, Model, model, Schema, Types } from 'mongoose'
+import { IRecipeDocument, RecipeSchema } from './recipe.model'
 
 enum MealType {
-  "BREAKFAST" = 0,
-  "SNACK" = 1,
-  "LUNCH" = 2,
-  "AFTERNOON_SNACK" = 3,
-  "DINNER" = 4,
-  "SUPPER" = 5,
+  'BREAKFAST' = 0,
+  'SNACK' = 1,
+  'LUNCH' = 2,
+  'AFTERNOON_SNACK' = 3,
+  'DINNER' = 4,
+  'SUPPER' = 5,
 }
 
 const MealSchema = new Schema(
@@ -44,28 +44,28 @@ const MealSchema = new Schema(
       default: Date.now,
     },
   },
-  { timestamps: true }
-);
+  { timestamps: true },
+)
 
 interface IMealSchema extends Document {
-  date: Date;
-  mealType: MealType;
-  createAt?: Date;
-  updatedAt?: Date;
+  date: Date
+  mealType: MealType
+  createAt?: Date
+  updatedAt?: Date
 }
 
 export interface IMeal extends IMealSchema {
-  recipes: Types.DocumentArray<IRecipeDocument>;
+  recipes: Types.DocumentArray<IRecipeDocument>
 }
 
 export interface IMealDocument extends IMeal {}
 
 export interface IMeal_populated extends IMeal {
-  recipes: Types.DocumentArray<IRecipeDocument>;
+  recipes: Types.DocumentArray<IRecipeDocument>
 }
 
 export interface IMealModel extends Model<IMeal> {
-  getMeal(id: string): Promise<IMeal_populated>;
+  getMeal(id: string): Promise<IMeal_populated>
 }
 
-export const Meal = model<IMealDocument, IMealModel>("Meal", MealSchema);
+export const Meal = model<IMealDocument, IMealModel>('Meal', MealSchema)

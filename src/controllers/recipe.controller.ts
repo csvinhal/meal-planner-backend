@@ -1,13 +1,13 @@
-import { CreateQuery, UpdateQuery } from "mongoose";
-import { IRecipeDocument, Recipe } from "../models";
+import { CreateQuery, UpdateQuery } from 'mongoose'
+import { IRecipeDocument, Recipe } from '../models'
 
 const listRecipes = async (): Promise<IRecipeDocument[]> => {
-  return await Recipe.find({});
-};
+  return await Recipe.find({})
+}
 
 const getRecipe = async (id: string): Promise<IRecipeDocument | null> => {
-  return await Recipe.findById(id);
-};
+  return await Recipe.findById(id)
+}
 
 const createRecipe = async ({
   recipeName,
@@ -17,13 +17,13 @@ const createRecipe = async ({
     const newRecipe = new Recipe({
       recipeName,
       description,
-    });
-    const created = await Recipe.create(newRecipe);
-    return created;
+    })
+    const created = await Recipe.create(newRecipe)
+    return created
   } catch (error) {
-    throw Error(error);
+    throw Error(error)
   }
-};
+}
 
 const updateRecipe = async ({
   _id,
@@ -36,28 +36,28 @@ const updateRecipe = async ({
       recipeName,
       description,
       updatedAt: new Date(),
-    });
+    })
 
     return await Recipe.findByIdAndUpdate(_id, updatedRecipe, {
       new: true,
-    });
+    })
   } catch (error) {
-    throw Error(error);
+    throw Error(error)
   }
-};
+}
 
 const deleteRecipe = async (
-  id: string
+  id: string,
 ): Promise<
   { ok?: number | undefined; n?: number | undefined } & {
-    deletedCount?: number | undefined;
+    deletedCount?: number | undefined
   }
 > => {
   try {
-    return await Recipe.deleteOne({ _id: id });
+    return await Recipe.deleteOne({ _id: id })
   } catch (error) {
-    throw Error(error);
+    throw Error(error)
   }
-};
+}
 
-export { listRecipes, getRecipe, createRecipe, updateRecipe, deleteRecipe };
+export { listRecipes, getRecipe, createRecipe, updateRecipe, deleteRecipe }

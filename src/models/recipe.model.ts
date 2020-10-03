@@ -1,4 +1,4 @@
-import { Document, model, Model, Schema } from "mongoose";
+import { Document, model, Model, Schema } from 'mongoose'
 
 export const RecipeSchema = new Schema(
   {
@@ -21,14 +21,14 @@ export const RecipeSchema = new Schema(
       default: Date.now,
     },
   },
-  { timestamps: true }
-);
+  { timestamps: true },
+)
 
 interface IRecipe {
-  recipeName: string;
-  description: string;
-  createdAt?: Date;
-  updatedAt?: Date;
+  recipeName: string
+  description: string
+  createdAt?: Date
+  updatedAt?: Date
 }
 
 interface IRecipeSchema extends IRecipe, Document {}
@@ -38,6 +38,6 @@ export interface IRecipeDocument extends IRecipeSchema {}
 export interface IRecipeModel extends Model<IRecipeDocument> {}
 
 export const Recipe = model<IRecipeDocument, IRecipeModel>(
-  "Recipe",
-  RecipeSchema
-);
+  'Recipe',
+  RecipeSchema,
+)

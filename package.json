@@ -8,7 +8,9 @@
     "dev": "nodemon --exec ts-node -r dotenv/config index.ts dotenv_config_path=./.env",
     "debug": "nodemon --inspect babel-node -r dotenv/config index.ts dotenv_config_path=./.env",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "tsc": "tsc"
+    "tsc": "tsc",
+    "format": "prettier --write src/**/*.ts{,x}",
+    "lint": "tsc --noEmit && eslint src/**/*.ts{,x}"
   },
   "repository": "git+https://github.com/csvinhal/meal-planner-backend.git",
   "keywords": [],
@@ -35,7 +37,20 @@
     "typescript": "^3.9.7"
   },
   "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^4.3.0",
+    "@typescript-eslint/parser": "^4.3.0",
     "dotenv": "^8.2.0",
-    "nodemon": "^2.0.4"
+    "eslint": "7.2.0",
+    "eslint-config-airbnb": "18.2.0",
+    "eslint-config-airbnb-typescript": "^11.0.0",
+    "eslint-config-prettier": "^6.12.0",
+    "eslint-plugin-import": "^2.21.2",
+    "eslint-plugin-jest": "^24.0.2",
+    "eslint-plugin-jsx-a11y": "^6.3.0",
+    "eslint-plugin-prettier": "^3.1.4",
+    "eslint-plugin-react": "^7.20.0",
+    "eslint-plugin-react-hooks": "4.0.0",
+    "nodemon": "^2.0.4",
+    "prettier": "^2.1.2"
   }
 }
