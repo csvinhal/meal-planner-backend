@@ -1,7 +1,7 @@
 import { Document, Model, model, Schema, Types } from 'mongoose'
 import { IRecipeDocument, RecipeSchema } from './recipe.model'
 
-enum MealType {
+export enum MealType {
   'BREAKFAST' = 0,
   'SNACK' = 1,
   'LUNCH' = 2,

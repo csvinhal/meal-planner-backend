@@ -1,12 +1,13 @@
-import { endOfWeek, startOfWeek } from 'date-fns'
+import { parseJSON, startOfDay, endOfDay } from 'date-fns'
 import { CreateQuery } from 'mongoose'
 import { IMealDocument, Meal } from '../models'
 
-const listMeals = async (): Promise<IMealDocument[]> => {
-  const date = new Date()
-  const startOfWeekDate = startOfWeek(date)
-  const endOfWeekDate = endOfWeek(date)
-
+const listMeals = async (
+  startDate: string | Date,
+  endDate: string | Date,
+): Promise<IMealDocument[]> => {
+  const startOfWeekDate = startOfDay(parseJSON(startDate))
+  const endOfWeekDate = endOfDay(parseJSON(endDate))
   return await Meal.find({
     date: { $gte: startOfWeekDate, $lte: endOfWeekDate },
   })
@@ -19,7 +20,7 @@ const createMeal = async ({
 }: CreateQuery<IMealDocument>): Promise<IMealDocument> => {
   try {
     const newMeal = new Meal({
-      date,
+      date: startOfDay(parseJSON(date)),
       mealType,
       recipes,
     })
