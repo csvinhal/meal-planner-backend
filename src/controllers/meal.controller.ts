@@ -16,14 +16,15 @@ const listMeals = async (
 const createMeal = async ({
   date,
   mealType,
-  recipes,
+  recipe,
 }: CreateQuery<IMealDocument>): Promise<IMealDocument> => {
   try {
     const newMeal = new Meal({
       date: startOfDay(parseJSON(date)),
       mealType,
-      recipes,
+      recipe,
     })
+
     const created = await Meal.create(newMeal)
     return created
   } catch (error) {

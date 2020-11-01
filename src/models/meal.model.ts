@@ -1,4 +1,4 @@
-import { Document, Model, model, Schema, Types } from 'mongoose'
+import { Document, Model, model, Schema } from 'mongoose'
 import { IRecipeDocument, RecipeSchema } from './recipe.model'
 
 export enum MealType {
@@ -29,8 +29,8 @@ const MealSchema = new Schema(
       ],
       required: true,
     },
-    recipes: {
-      type: [RecipeSchema],
+    recipe: {
+      type: RecipeSchema,
       required: true,
     },
     createAt: {
@@ -55,17 +55,11 @@ interface IMealSchema extends Document {
 }
 
 export interface IMeal extends IMealSchema {
-  recipes: Types.DocumentArray<IRecipeDocument>
+  recipe: IRecipeDocument
 }
 
 export interface IMealDocument extends IMeal {}
 
-export interface IMeal_populated extends IMeal {
-  recipes: Types.DocumentArray<IRecipeDocument>
-}
-
-export interface IMealModel extends Model<IMeal> {
-  getMeal(id: string): Promise<IMeal_populated>
-}
+export interface IMealModel extends Model<IMeal> {}
 
 export const Meal = model<IMealDocument, IMealModel>('Meal', MealSchema)
