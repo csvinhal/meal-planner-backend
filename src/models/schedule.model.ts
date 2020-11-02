@@ -1,12 +1,14 @@
-import { MealType, IMealDocument } from './meal.model'
+import { IMealDocument, MealType } from './meal.model'
+
+export interface ScheduleDaysOfWeek {
+  [x: string]: IMealDocument | null
+}
 
 export interface Schedule {
-  [x: string]: {
-    [MealType.BREAKFAST]: IMealDocument | null
-    [MealType.SNACK]: IMealDocument | null
-    [MealType.LUNCH]: IMealDocument | null
-    [MealType.AFTERNOON_SNACK]: IMealDocument | null
-    [MealType.DINNER]: IMealDocument | null
-    [MealType.SUPPER]: IMealDocument | null
-  }
+  [MealType.BREAKFAST]: ScheduleDaysOfWeek
+  [MealType.SNACK]: ScheduleDaysOfWeek
+  [MealType.LUNCH]: ScheduleDaysOfWeek
+  [MealType.AFTERNOON_SNACK]: ScheduleDaysOfWeek
+  [MealType.DINNER]: ScheduleDaysOfWeek
+  [MealType.SUPPER]: ScheduleDaysOfWeek
 }

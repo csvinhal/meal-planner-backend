@@ -1,42 +1,48 @@
 import { addDays, endOfWeek, parseJSON, startOfWeek } from 'date-fns'
+import { MealType } from '../models'
+import { Schedule, ScheduleDaysOfWeek } from '../models/schedule.model'
 import { listMeals } from './meal.controller'
-import { Schedule } from '../models/schedule.model'
 
 const getSchedule = async (date: string): Promise<any> => {
   const parsedDate = parseJSON(date)
   const startOfWeekDate = startOfWeek(parsedDate)
   const endOfWeekDate = endOfWeek(parsedDate)
-  let currentDay = startOfWeekDate
+
+  const scheduleDaysOfWeek = getScheduleDaysOfWeek(startOfWeekDate)
 
   const schedule: Schedule = {
-    [currentDay.toISOString()]: getEmptyDayMeals(),
-  }
-
-  for (let i = 0; i < 6; i++) {
-    const nextDay = addDays(currentDay, 1)
-    schedule[nextDay.toISOString()] = getEmptyDayMeals()
-    currentDay = nextDay
+    [MealType.BREAKFAST]: scheduleDaysOfWeek,
+    [MealType.SNACK]: scheduleDaysOfWeek,
+    [MealType.LUNCH]: scheduleDaysOfWeek,
+    [MealType.AFTERNOON_SNACK]: scheduleDaysOfWeek,
+    [MealType.DINNER]: scheduleDaysOfWeek,
+    [MealType.SUPPER]: scheduleDaysOfWeek,
   }
 
   const meals = await listMeals(startOfWeekDate, endOfWeekDate)
 
   meals.forEach((meal) => {
-    schedule[meal.date.toISOString()] = {
-      ...schedule[meal.date.toISOString()],
-      [meal.mealType]: meal,
+    schedule[meal.mealType] = {
+      ...schedule[meal.mealType],
+      [meal.date.toISOString()]: meal,
     }
   })
 
   return schedule
 }
 
-const getEmptyDayMeals = () => ({
-  0: null,
-  1: null,
-  2: null,
-  3: null,
-  4: null,
-  5: null,
-})
+const getScheduleDaysOfWeek = (startOfWeekDate: Date): ScheduleDaysOfWeek => {
+  const weekList: ScheduleDaysOfWeek = { [startOfWeekDate.toISOString()]: null }
+
+  let currentDay = startOfWeekDate
+
+  // eslint-disable-next-line no-plusplus
+  for (let i = 0; i < 6; i++) {
+    const nextDay = addDays(currentDay, 1)
+    currentDay = nextDay
+    weekList[nextDay.toISOString()] = null
+  }
+  return weekList
+}
 
 export { getSchedule }
