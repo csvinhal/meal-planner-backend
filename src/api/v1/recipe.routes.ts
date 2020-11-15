@@ -4,7 +4,7 @@ import {
   deleteRecipe,
   getRecipe,
   listRecipes,
-  updateRecipe,
+  updateRecipe
 } from '../../controllers'
 
 const router = express.Router()
@@ -30,8 +30,7 @@ router.get('/:id', async (req, res, next) => {
 
 router.post('/', async (req, res, next) => {
   try {
-    const { recipeName, description } = req.body
-    const recipe = await createRecipe({ recipeName, description })
+    const recipe = await createRecipe(req.body)
     res.status(200).json(recipe)
   } catch (error) {
     next(error)

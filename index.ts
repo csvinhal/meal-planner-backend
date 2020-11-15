@@ -1,6 +1,7 @@
 import app from './src/app'
+import config from './src/config'
 
-const port = process.env.PORT || 4000
+const port = config.port
 app.listen(port, () => {
   console.log(`Listening at http://localhost:${port}`)
 })

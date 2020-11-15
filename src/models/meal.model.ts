@@ -1,5 +1,5 @@
 import { Document, Model, model, Schema } from 'mongoose'
-import { IRecipeDocument, RecipeSchema } from './recipe.model'
+import { IRecipeSchema, RecipeSchema } from './recipe.model'
 
 export enum MealType {
   'BREAKFAST' = 0,
@@ -47,19 +47,16 @@ const MealSchema = new Schema(
   { timestamps: true },
 )
 
-interface IMealSchema extends Document {
+export interface IMeal {
   date: Date
+  recipe: IRecipeSchema
   mealType: MealType
   createAt?: Date
   updatedAt?: Date
 }
 
-export interface IMeal extends IMealSchema {
-  recipe: IRecipeDocument
-}
+type IMealSchema = IMeal & Document 
 
 export interface IMealDocument extends IMeal {}
 
-export interface IMealModel extends Model<IMeal> {}
-
-export const Meal = model<IMealDocument, IMealModel>('Meal', MealSchema)
+export const Meal = model<IMealSchema,  Model<IMealSchema>>('Meal', MealSchema)

@@ -1,8 +1,8 @@
-import { CreateQuery, UpdateQuery } from 'mongoose'
-import { IRecipeDocument, Recipe } from '../models'
+import { UpdateQuery } from 'mongoose'
+import { IRecipeDocument, IRecipeInputDTO, Recipe } from './../models'
 
 const listRecipes = async (): Promise<IRecipeDocument[]> => {
-  return await Recipe.find({})
+  return await Recipe.find()
 }
 
 const getRecipe = async (id: string): Promise<IRecipeDocument | null> => {
@@ -12,7 +12,7 @@ const getRecipe = async (id: string): Promise<IRecipeDocument | null> => {
 const createRecipe = async ({
   recipeName,
   description,
-}: CreateQuery<IRecipeDocument>): Promise<IRecipeDocument> => {
+}: IRecipeInputDTO): Promise<IRecipeInputDTO> => {
   try {
     const newRecipe = new Recipe({
       recipeName,

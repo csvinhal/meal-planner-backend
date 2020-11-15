@@ -24,20 +24,23 @@ export const RecipeSchema = new Schema(
   { timestamps: true },
 )
 
-interface IRecipe {
+export interface IRecipe {
   recipeName: string
   description: string
   createdAt?: Date
   updatedAt?: Date
 }
 
-interface IRecipeSchema extends IRecipe, Document {}
+export interface IRecipeInputDTO {
+  recipeName: string
+  description: string
+}
 
-export interface IRecipeDocument extends IRecipeSchema {}
+export type IRecipeSchema = IRecipe & Document
 
-export interface IRecipeModel extends Model<IRecipeDocument> {}
+export type IRecipeModel = Model<IRecipeSchema>
 
-export const Recipe = model<IRecipeDocument, IRecipeModel>(
+export const Recipe = model<IRecipeSchema, Model<IRecipeSchema>>(
   'Recipe',
   RecipeSchema,
 )

@@ -1,7 +1,8 @@
 import { connect, set } from 'mongoose'
+import config from './../config'
 
 set('useCreateIndex', true)
-connect(`${process.env.MONGODB_URL}/${process.env.MONGODB_NAME}`, {
+connect(config.databaseURL, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
   useFindAndModify: false,

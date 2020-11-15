@@ -3,7 +3,7 @@ import express, { Application, NextFunction, Request, Response } from 'express'
 import helmet from 'helmet'
 import morgan from 'morgan'
 import routesV1 from './api/v1'
-import './db/config'
+import './db'
 
 const app: Application = express()
 app.use(helmet())
