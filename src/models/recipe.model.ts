@@ -10,6 +10,10 @@ export const RecipeSchema = new Schema(
       type: String,
       required: true,
     },
+    recipeImage: {
+      data: Buffer,
+      contentType: String,
+    },
     createdAt: {
       type: Date,
       required: true,
@@ -27,6 +31,10 @@ export const RecipeSchema = new Schema(
 export interface IRecipe {
   recipeName: string
   description: string
+  recipeImage: {
+    data: Buffer
+    contentType: String
+  }
   createdAt?: Date
   updatedAt?: Date
 }
@@ -34,6 +42,12 @@ export interface IRecipe {
 export interface IRecipeInputDTO {
   recipeName: string
   description: string
+}
+
+export interface IRecipeOutputDTO {
+  recipeName: string
+  description: string
+  recipeImage: string
 }
 
 export type IRecipeSchema = IRecipe & Document

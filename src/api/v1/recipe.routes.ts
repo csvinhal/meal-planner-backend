@@ -1,13 +1,15 @@
 import express, { NextFunction, Request, Response } from 'express'
+import multer from 'multer'
 import {
   createRecipe,
   deleteRecipe,
   getRecipe,
   listRecipes,
-  updateRecipe
+  updateRecipe,
 } from '../../controllers'
 
 const router = express.Router()
+const upload = multer({ dest: 'uploads/' })
 
 router.get('/', async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -28,10 +30,12 @@ router.get('/:id', async (req, res, next) => {
   }
 })
 
-router.post('/', async (req, res, next) => {
+router.post('/', upload.single('recipeImage'), async (req, res, next) => {
   try {
-    const recipe = await createRecipe(req.body)
-    res.status(200).json(recipe)
+    const recipeInput = req.body
+    const recipeImage = req.file
+    const recipe = await createRecipe(recipeInput, recipeImage)
+    res.status(201).json(recipe)
   } catch (error) {
     next(error)
   }
@@ -39,13 +43,10 @@ router.post('/', async (req, res, next) => {
 
 router.put('/:id', async (req, res, next) => {
   try {
-    const { id: _id } = req.params
-    const { recipeName, recipeDescription } = req.body
-    const recipe = await updateRecipe({
-      _id,
-      recipeName,
-      recipeDescription,
-    })
+    const { id } = req.params
+    const recipeInput = req.body
+    const recipeImage = req.file
+    const recipe = await updateRecipe(id, recipeInput, recipeImage)
     res.status(200).json(recipe)
   } catch (error) {
     next(error)

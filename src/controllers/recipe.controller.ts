@@ -1,22 +1,29 @@
+import fs from 'fs'
 import { UpdateQuery } from 'mongoose'
-import { IRecipeDocument, IRecipeInputDTO, Recipe } from './../models'
+import { IRecipe, IRecipeInputDTO, IRecipeOutputDTO, Recipe } from './../models'
 
-const listRecipes = async (): Promise<IRecipeDocument[]> => {
-  return await Recipe.find()
+const listRecipes = async (): Promise<IRecipeOutputDTO[]> => {
+  const recipes = await Recipe.find().lean()
+  return recipes.map((recipe) => convertRecipeSchemaToOutput(recipe))
 }
 
-const getRecipe = async (id: string): Promise<IRecipeDocument | null> => {
-  return await Recipe.findById(id)
+const getRecipe = async (id: string): Promise<IRecipeOutputDTO | null> => {
+  const recipe = await Recipe.findById(id).lean()
+  return recipe ? convertRecipeSchemaToOutput(recipe) : null
 }
 
-const createRecipe = async ({
-  recipeName,
-  description,
-}: IRecipeInputDTO): Promise<IRecipeInputDTO> => {
+const createRecipe = async (
+  { recipeName, description }: IRecipeInputDTO,
+  recipeImage: Express.Multer.File,
+): Promise<IRecipeInputDTO> => {
   try {
     const newRecipe = new Recipe({
       recipeName,
       description,
+      recipeImage: {
+        data: fs.readFileSync(recipeImage.path),
+        contentType: recipeImage.mimetype,
+      },
     })
     const created = await Recipe.create(newRecipe)
     return created
@@ -25,22 +32,32 @@ const createRecipe = async ({
   }
 }
 
-const updateRecipe = async ({
-  _id,
-  recipeName,
-  description,
-}: UpdateQuery<IRecipeDocument>): Promise<IRecipeDocument | null> => {
+const updateRecipe = async (
+  id: string,
+  { recipeName, description }: UpdateQuery<IRecipeInputDTO>,
+  recipeImage?: Express.Multer.File,
+): Promise<IRecipeOutputDTO | null> => {
   try {
-    const updatedRecipe = new Recipe({
-      _id,
+    let newRecipeImage = {}
+    if (recipeImage) {
+      newRecipeImage = {
+        data: fs.readFileSync(recipeImage.path),
+        contentType: recipeImage.mimetype,
+      }
+    }
+    const recipe = new Recipe({
+      _id: id,
       recipeName,
       description,
       updatedAt: new Date(),
+      ...newRecipeImage,
     })
 
-    return await Recipe.findByIdAndUpdate(_id, updatedRecipe, {
+    const updatedRecipe = await Recipe.findByIdAndUpdate(id, recipe, {
       new: true,
-    })
+    }).lean()
+
+    return updatedRecipe ? convertRecipeSchemaToOutput(updatedRecipe) : null
   } catch (error) {
     throw Error(error)
   }
@@ -59,5 +76,10 @@ const deleteRecipe = async (
     throw Error(error)
   }
 }
+
+const convertRecipeSchemaToOutput = (recipe: IRecipe): IRecipeOutputDTO => ({
+  ...recipe,
+  recipeImage: Buffer.from(recipe.recipeImage.data.buffer).toString('base64'),
+})
 
 export { listRecipes, getRecipe, createRecipe, updateRecipe, deleteRecipe }
