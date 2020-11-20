@@ -1,5 +1,6 @@
 import express, { NextFunction, Request, Response } from 'express'
 import multer from 'multer'
+import config from '../../config'
 import {
   createRecipe,
   deleteRecipe,
@@ -9,7 +10,7 @@ import {
 } from '../../controllers'
 
 const router = express.Router()
-const upload = multer({ dest: 'uploads/' })
+const upload = multer({ dest: config.uploadDest })
 
 router.get('/', async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -41,7 +42,7 @@ router.post('/', upload.single('recipeImage'), async (req, res, next) => {
   }
 })
 
-router.put('/:id', async (req, res, next) => {
+router.put('/:id', upload.single('recipeImage'), async (req, res, next) => {
   try {
     const { id } = req.params
     const recipeInput = req.body

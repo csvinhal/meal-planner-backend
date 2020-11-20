@@ -1,5 +1,6 @@
 import fs from 'fs'
 import { UpdateQuery } from 'mongoose'
+import { cleanDirectory } from '../utils/clean-directory'
 import { IRecipe, IRecipeInputDTO, IRecipeOutputDTO, Recipe } from './../models'
 
 const listRecipes = async (): Promise<IRecipeOutputDTO[]> => {
@@ -25,7 +26,11 @@ const createRecipe = async (
         contentType: recipeImage.mimetype,
       },
     })
+
     const created = await Recipe.create(newRecipe)
+
+    cleanDirectory()
+    
     return created
   } catch (error) {
     throw Error(error)
@@ -39,10 +44,13 @@ const updateRecipe = async (
 ): Promise<IRecipeOutputDTO | null> => {
   try {
     let newRecipeImage = {}
+
     if (recipeImage) {
       newRecipeImage = {
-        data: fs.readFileSync(recipeImage.path),
-        contentType: recipeImage.mimetype,
+        recipeImage: {
+          data: fs.readFileSync(recipeImage.path),
+          contentType: recipeImage.mimetype,
+        },
       }
     }
     const recipe = new Recipe({
@@ -56,6 +64,8 @@ const updateRecipe = async (
     const updatedRecipe = await Recipe.findByIdAndUpdate(id, recipe, {
       new: true,
     }).lean()
+
+    cleanDirectory()
 
     return updatedRecipe ? convertRecipeSchemaToOutput(updatedRecipe) : null
   } catch (error) {
