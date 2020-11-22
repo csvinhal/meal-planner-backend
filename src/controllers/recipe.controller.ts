@@ -1,10 +1,28 @@
+import escapeStringRegexp from 'escape-string-regexp'
 import fs from 'fs'
 import { UpdateQuery } from 'mongoose'
 import { cleanDirectory } from '../utils/clean-directory'
-import { IRecipe, IRecipeInputDTO, IRecipeOutputDTO, Recipe } from './../models'
+import {
+  IRecipe,
+  IRecipeInputDTO,
+  IRecipeInputQueryParamsDTO,
+  IRecipeOutputDTO,
+  Recipe,
+} from './../models'
 
-const listRecipes = async (): Promise<IRecipeOutputDTO[]> => {
-  const recipes = await Recipe.find().lean()
+const listRecipes = async ({
+  recipeName,
+}: IRecipeInputQueryParamsDTO): Promise<IRecipeOutputDTO[]> => {
+  let params = {}
+
+  if (recipeName) {
+    params = {
+      ...params,
+      recipeName: new RegExp(escapeStringRegexp(recipeName), 'i'),
+    }
+  }
+  console.log(recipeName)
+  const recipes = await Recipe.find(params).lean()
   return recipes.map((recipe) => convertRecipeSchemaToOutput(recipe))
 }
 
@@ -21,16 +39,18 @@ const createRecipe = async (
     const newRecipe = new Recipe({
       recipeName,
       description,
-      recipeImage: {
-        data: fs.readFileSync(recipeImage.path),
-        contentType: recipeImage.mimetype,
-      },
+      recipeImage: recipeImage
+        ? {
+            data: fs.readFileSync(recipeImage.path),
+            contentType: recipeImage.mimetype,
+          }
+        : null,
     })
 
     const created = await Recipe.create(newRecipe)
 
     cleanDirectory()
-    
+
     return created
   } catch (error) {
     throw Error(error)
@@ -89,7 +109,9 @@ const deleteRecipe = async (
 
 const convertRecipeSchemaToOutput = (recipe: IRecipe): IRecipeOutputDTO => ({
   ...recipe,
-  recipeImage: Buffer.from(recipe.recipeImage.data.buffer).toString('base64'),
+  recipeImage: recipe.recipeImage
+    ? Buffer.from(recipe.recipeImage.data.buffer).toString('base64')
+    : undefined,
 })
 
 export { listRecipes, getRecipe, createRecipe, updateRecipe, deleteRecipe }

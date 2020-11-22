@@ -14,7 +14,7 @@ const upload = multer({ dest: config.uploadDest })
 
 router.get('/', async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const recipes = await listRecipes()
+    const recipes = await listRecipes(req.query)
     res.status(200).json(recipes)
   } catch (error) {
     next(error)

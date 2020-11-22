@@ -44,10 +44,15 @@ export interface IRecipeInputDTO {
   description: string
 }
 
+export interface IRecipeInputQueryParamsDTO {
+  recipeName?: string
+
+}
+
 export interface IRecipeOutputDTO {
   recipeName: string
   description: string
-  recipeImage: string
+  recipeImage?: string
 }
 
 export type IRecipeSchema = IRecipe & Document
