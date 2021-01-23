@@ -1,6 +1,5 @@
-import { parseJSON, startOfDay, endOfDay } from 'date-fns'
-import { CreateQuery } from 'mongoose'
-import { IMealDocument, Meal } from '../models'
+import { endOfDay, parseJSON, startOfDay } from 'date-fns'
+import { IMealDocument, IMealInputDTO, Meal } from '../models'
 
 const listMeals = async (
   startDate: string | Date,
@@ -11,18 +10,20 @@ const listMeals = async (
   return await Meal.find({
     date: { $gte: startOfWeekDate, $lte: endOfWeekDate },
   })
+    .populate({ path: 'recipe' })
+    .exec()
 }
 
 const createMeal = async ({
   date,
   mealType,
-  recipe,
-}: CreateQuery<IMealDocument>): Promise<IMealDocument> => {
+  recipeId,
+}: IMealInputDTO): Promise<IMealDocument> => {
   try {
     const newMeal = new Meal({
       date: startOfDay(parseJSON(date)),
       mealType,
-      recipe,
+      recipe: recipeId,
     })
 
     const created = await Meal.create(newMeal)

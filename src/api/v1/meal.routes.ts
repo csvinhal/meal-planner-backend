@@ -15,8 +15,8 @@ router.get('/', async (req: Request, res: Response, next: NextFunction) => {
 
 router.post('/', async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const { date, mealType, recipe } = req.body
-    const schedule = await createMeal({ date, mealType, recipe })
+    const { date, mealType, recipeId } = req.body
+    const schedule = await createMeal({ date, mealType, recipeId })
     res.status(200).json(schedule)
   } catch (error) {
     next(error)

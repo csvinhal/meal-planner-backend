@@ -11,8 +11,10 @@ export const RecipeSchema = new Schema(
       required: true,
     },
     recipeImage: {
-      data: Buffer,
-      contentType: String,
+      type: Buffer,
+      get: (value: Buffer) => {
+        return Buffer.from(value).toString('base64')
+      },
     },
     createdAt: {
       type: Date,
@@ -25,16 +27,13 @@ export const RecipeSchema = new Schema(
       default: Date.now,
     },
   },
-  { timestamps: true },
+  { timestamps: true, toJSON: { getters: true } },
 )
 
 export interface IRecipe {
   recipeName: string
   description: string
-  recipeImage: {
-    data: Buffer
-    contentType: String
-  }
+  recipeImage: Buffer
   createdAt?: Date
   updatedAt?: Date
 }
@@ -46,7 +45,6 @@ export interface IRecipeInputDTO {
 
 export interface IRecipeInputQueryParamsDTO {
   recipeName?: string
-
 }
 
 export interface IRecipeOutputDTO {

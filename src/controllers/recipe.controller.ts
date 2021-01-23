@@ -3,10 +3,10 @@ import fs from 'fs'
 import { UpdateQuery } from 'mongoose'
 import { cleanDirectory } from '../utils/clean-directory'
 import {
-  IRecipe,
   IRecipeInputDTO,
   IRecipeInputQueryParamsDTO,
   IRecipeOutputDTO,
+  IRecipeSchema,
   Recipe,
 } from './../models'
 
@@ -21,37 +21,31 @@ const listRecipes = async ({
       recipeName: new RegExp(escapeStringRegexp(recipeName), 'i'),
     }
   }
-  console.log(recipeName)
-  const recipes = await Recipe.find(params).lean()
-  return recipes.map((recipe) => convertRecipeSchemaToOutput(recipe))
+  const recipes = await Recipe.find(params)
+  return recipes.map((recipe) => recipe.toJSON())
 }
 
 const getRecipe = async (id: string): Promise<IRecipeOutputDTO | null> => {
-  const recipe = await Recipe.findById(id).lean()
-  return recipe ? convertRecipeSchemaToOutput(recipe) : null
+  const recipe = await Recipe.findById(id)
+  return recipe ? recipe.toJSON() : null
 }
 
 const createRecipe = async (
   { recipeName, description }: IRecipeInputDTO,
   recipeImage: Express.Multer.File,
-): Promise<IRecipeInputDTO> => {
+): Promise<IRecipeSchema> => {
   try {
     const newRecipe = new Recipe({
       recipeName,
       description,
-      recipeImage: recipeImage
-        ? {
-            data: fs.readFileSync(recipeImage.path),
-            contentType: recipeImage.mimetype,
-          }
-        : null,
+      recipeImage: recipeImage ? fs.readFileSync(recipeImage.path) : null,
     })
 
     const created = await Recipe.create(newRecipe)
 
     cleanDirectory()
 
-    return created
+    return created.toJSON()
   } catch (error) {
     throw Error(error)
   }
@@ -67,10 +61,7 @@ const updateRecipe = async (
 
     if (recipeImage) {
       newRecipeImage = {
-        recipeImage: {
-          data: fs.readFileSync(recipeImage.path),
-          contentType: recipeImage.mimetype,
-        },
+        recipeImage: fs.readFileSync(recipeImage.path),
       }
     }
     const recipe = new Recipe({
@@ -83,11 +74,11 @@ const updateRecipe = async (
 
     const updatedRecipe = await Recipe.findByIdAndUpdate(id, recipe, {
       new: true,
-    }).lean()
+    })
 
     cleanDirectory()
 
-    return updatedRecipe ? convertRecipeSchemaToOutput(updatedRecipe) : null
+    return updatedRecipe ? updatedRecipe.toJSON() : null
   } catch (error) {
     throw Error(error)
   }
@@ -106,12 +97,5 @@ const deleteRecipe = async (
     throw Error(error)
   }
 }
-
-const convertRecipeSchemaToOutput = (recipe: IRecipe): IRecipeOutputDTO => ({
-  ...recipe,
-  recipeImage: recipe.recipeImage
-    ? Buffer.from(recipe.recipeImage.data.buffer).toString('base64')
-    : undefined,
-})
 
 export { listRecipes, getRecipe, createRecipe, updateRecipe, deleteRecipe }
